@@ -6,7 +6,7 @@
   </a>
 </p>
 
-> IoT Manager Broker
+> Elsabor-Backend
 
 ### 🏠 [Homepage](https://github.com/JLiao98/elsabor-backend)
 
