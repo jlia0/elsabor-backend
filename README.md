@@ -1,21 +1,21 @@
 <h1 align="center">Welcome to Elsabor 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/JLiao98/Elsabor/README.md" target="_blank">
+  <a href="https://github.com/JLiao98/elsabor-backend/README.md" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
 </p>
 
 > IoT Manager Broker
 
-### 🏠 [Homepage](https://github.com/JLiao98/Elsabor)
+### 🏠 [Homepage](https://github.com/JLiao98/elsabor-backend)
 
 ## Install
 
 Clone the repository:
 
 ```sh
-git clone git@github.com:JLiao98/Elsabor.git
+git clone git@github.com:JLiao98/elsabor-backend.git
 ```
 
 Install dependencies:
@@ -44,13 +44,6 @@ Once the server started, open [localhost:3000/](http://localhost:3000/) in your 
 
 - Github: [@JLiao98](https://github.com/JLiao98)
 
-👤 **Rakheem Dewji**
-
-- Github: [@raksdewji](https://github.com/raksdewji)
-
-👤 **Artem Golovin**
-
-- Github: [@awave1](https://github.com/awave1)
 
 ## 🤝 Contributing
 
