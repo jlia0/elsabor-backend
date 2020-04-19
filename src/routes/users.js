@@ -70,7 +70,8 @@ router.post('/deleteUser', async (req, res) => {
 // deal table related
 router.get('/getDeals', async (req, res) => {
   try {
-    const { rows } = await SQL(`SELECT * FROM public.deal;`);
+    let tempdate = new Date().toLocaleDateString();
+    const { rows } = await SQL(`SELECT * FROM public.deal WHERE expiry >= '${tempdate}';`);
     res.status(200).json(rows);
   } catch (err) {
     res.status(500).send(err.message);
@@ -79,11 +80,40 @@ router.get('/getDeals', async (req, res) => {
 
 router.post('/addDeal', async (req, res) => {
   try {
-    const { name, desp, link, userid } = req.body;
+    const { name, desp, link, userid, expiry } = req.body;
     const { rows } = await SQL(
-      `INSERT INTO public.deal (name, desp, link, userid) VALUES ('${name}','${desp}','${link}','${userid}') returning dealid;`,
+      `INSERT INTO public.deal (name, desp, link, userid, expiry) VALUES ('${name}','${desp}','${link}','${userid}','${expiry}') returning dealid;`,
     );
     res.status(200).json(rows[0].dealid);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.get('/deals/:dealid', async (req, res) => {
+  try {
+    const { dealid } = req.params;
+    let tempdate = new Date().toLocaleDateString();
+    const { rows } = await SQL(`SELECT * FROM public.deal WHERE dealid = '${dealid}' AND expiry >= '${tempdate}';`);
+    if (rows.length === 0){
+      res.status(200).send("This deal has expired or does not exist!");
+    }else{
+      res.status(200).send("This deal is verified successfully!");
+    }
+
+
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post('/searchDeals', async (req, res) => {
+  try {
+    const { keyword } = req.body;
+    const { rows } = await SQL(
+      `SELECT * FROM public.deal WHERE name ~* '${keyword}';`,
+    );
+    res.status(200).json(rows);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -149,6 +179,7 @@ router.post('/addMenu', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
 
 // saved deal table related
 router.post('/getSavedDeals', async (req, res) => {
