@@ -130,7 +130,7 @@ router.post('/addDeal', async (req, res) => {
 
 
 // coupon table related
-router.get('/getCouponsByDID', async (req, res) => {
+router.get('/getCouponByDID', async (req, res) => {
   try {
     const { dealid } = req.body;
     const { rows } = await SQL(`SELECT * FROM public.coupon WHERE dealid = '${dealid}';`);
