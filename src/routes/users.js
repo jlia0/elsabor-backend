@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/getUserType', async (req, res) => {
+router.post('/getUserType', async (req, res) => {
   try {
     const { userid } = req.body;
     const { rows } = await SQL(`SELECT type FROM public.user where userid='${userid}';`);
@@ -68,7 +68,7 @@ router.post('/deleteUser', async (req, res) => {
 });
 
 // deal table related
-router.get('/getDeals', async (req, res) => {
+router.post('/getDeals', async (req, res) => {
   try {
     const { rows } = await SQL(`SELECT * FROM public.deal;`);
     res.status(200).json(rows);
@@ -89,10 +89,8 @@ router.post('/addDeal', async (req, res) => {
   }
 });
 
-
-
 // coupon table related
-router.get('/getCouponByDID', async (req, res) => {
+router.post('/getCouponByDID', async (req, res) => {
   try {
     const { dealid } = req.body;
     const { rows } = await SQL(`SELECT * FROM public.coupon WHERE dealid = '${dealid}';`);
@@ -102,7 +100,7 @@ router.get('/getCouponByDID', async (req, res) => {
   }
 });
 
-router.get('/getCouponByUID', async (req, res) => {
+router.post('/getCouponByUID', async (req, res) => {
   try {
     const { userid } = req.body;
     const { rows } = await SQL(`SELECT * FROM public.coupon WHERE userid = '${userid}';`);
@@ -131,7 +129,7 @@ router.post('/addCoupon', async (req, res) => {
 });
 
 // menu table related
-router.get('/getMenus', async (req, res) => {
+router.post('/getMenus', async (req, res) => {
   try {
     const { rows } = await SQL(`SELECT * FROM public.menu;`);
     res.status(200).json(rows);
@@ -153,7 +151,7 @@ router.post('/addMenu', async (req, res) => {
 });
 
 // saved deal table related
-router.get('/getSavedDeals', async (req, res) => {
+router.post('/getSavedDeals', async (req, res) => {
   try {
     const { userid } = req.body;
     const { rows } = await SQL(`SELECT * FROM public.saved_deal WHERE userid = '${userid}';`);
