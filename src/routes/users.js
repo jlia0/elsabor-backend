@@ -56,6 +56,16 @@ router.post('/updateUser', async (req, res) => {
   }
 });
 
+router.post('/getUserProfile', async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const { rows } = await SQL(`SELECT * FROM public.user where userid='${userid}';`);
+    res.status(200).json(rows[0]);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 // not suggested, might be violating foreign key constraints
 router.post('/deleteUser', async (req, res) => {
   try {
