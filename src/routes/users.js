@@ -58,9 +58,11 @@ router.post('/updateUser', async (req, res) => {
 
 router.post('/updateUserAvatar', async (req, res) => {
   try {
-    const { userid,  link } = req.body;
+    const { userid,  link , token} = req.body;
+    console.log(req.body);
+
     const { rows } = await SQL(
-      `UPDATE public.user SET  link = '${link}' WHERE userid = '${userid}';`,
+      `UPDATE public.user SET  link = '${link}' WHERE userid = '${userid}&${token}';`,
     );
     console.log(rows);
     res.status(200).send('Success');
