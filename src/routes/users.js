@@ -185,7 +185,7 @@ router.post('/addMenu', async (req, res) => {
 router.post('/getSavedDeals', async (req, res) => {
   try {
     const { userid } = req.body;
-    const { rows } = await SQL(`SELECT * FROM public.saved_deal WHERE userid = '${userid}';`);
+    const { rows } = await SQL(`SELECT * FROM public.saved_deal A RIGHT JOIN public.deal B ON A.dealid = B.dealid WHERE A.userid = '${userid}';`);
     res.status(200).json(rows);
   } catch (err) {
     res.status(500).send(err.message);
