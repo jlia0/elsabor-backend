@@ -1,8 +1,10 @@
-/* eslint-disable no-use-before-define */
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+var cors = require('cors');
+
+
 // const cors_proxy = require('cors-anywhere');
 // const mqtt = require('mqtt');
 // const mongoose = require('mongoose');
@@ -55,12 +57,14 @@ app.use((req, res, next) => next(createError(404)));
 // };
 //
 // app.use(allowCrossDomain);
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Cache-Control', 'no-cache');
-//   // res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Cache-Control', 'no-cache');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+app.use(cors());
 
 // error handler
 app.use((err, req, res) => {
