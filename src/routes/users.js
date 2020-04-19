@@ -56,6 +56,19 @@ router.post('/updateUser', async (req, res) => {
   }
 });
 
+router.post('/updateUserAvatar', async (req, res) => {
+  try {
+    const { userid,  link } = req.body;
+    const { rows } = await SQL(
+      `UPDATE public.user SET  link = '${link}' WHERE userid = '${userid}';`,
+    );
+    console.log(rows);
+    res.status(200).send('Success');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 router.post('/getUserProfile', async (req, res) => {
   try {
     const { userid } = req.body;
