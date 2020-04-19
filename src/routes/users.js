@@ -68,7 +68,7 @@ router.post('/deleteUser', async (req, res) => {
 });
 
 // deal table related
-router.post('/getDeals', async (req, res) => {
+router.get('/getDeals', async (req, res) => {
   try {
     const { rows } = await SQL(`SELECT * FROM public.deal;`);
     res.status(200).json(rows);
@@ -90,46 +90,46 @@ router.post('/addDeal', async (req, res) => {
 });
 
 // coupon table related
-router.post('/getCouponByDID', async (req, res) => {
-  try {
-    const { dealid } = req.body;
-    const { rows } = await SQL(`SELECT * FROM public.coupon WHERE dealid = '${dealid}';`);
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-router.post('/getCouponByUID', async (req, res) => {
-  try {
-    const { userid } = req.body;
-    const { rows } = await SQL(`SELECT * FROM public.coupon WHERE userid = '${userid}';`);
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
-
-router.post('/addCoupon', async (req, res) => {
-  try {
-    const { dealid, userid, link, number } = req.body;
-
-    let response = [];
-
-    for (let i = 0; i < number; i++) {
-      const { rows } = await SQL(
-        `INSERT INTO public.coupon (dealid, userid, link) VALUES ('${dealid}','${userid}','${link}') returning couponid;`,
-      );
-      response.push(rows[0].couponid);
-    }
-    res.status(200).json(response);
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-});
+// router.post('/getCouponByDID', async (req, res) => {
+//   try {
+//     const { dealid } = req.body;
+//     const { rows } = await SQL(`SELECT * FROM public.coupon WHERE dealid = '${dealid}';`);
+//     res.status(200).json(rows);
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// });
+//
+// router.post('/getCouponByUID', async (req, res) => {
+//   try {
+//     const { userid } = req.body;
+//     const { rows } = await SQL(`SELECT * FROM public.coupon WHERE userid = '${userid}';`);
+//     res.status(200).json(rows);
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// });
+//
+// router.post('/addCoupon', async (req, res) => {
+//   try {
+//     const { dealid, userid, link, number } = req.body;
+//
+//     let response = [];
+//
+//     for (let i = 0; i < number; i++) {
+//       const { rows } = await SQL(
+//         `INSERT INTO public.coupon (dealid, userid, link) VALUES ('${dealid}','${userid}','${link}') returning couponid;`,
+//       );
+//       response.push(rows[0].couponid);
+//     }
+//     res.status(200).json(response);
+//   } catch (err) {
+//     res.status(500).send(err.message);
+//   }
+// });
 
 // menu table related
-router.post('/getMenus', async (req, res) => {
+router.get('/getMenus', async (req, res) => {
   try {
     const { rows } = await SQL(`SELECT * FROM public.menu;`);
     res.status(200).json(rows);
