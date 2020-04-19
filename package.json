@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "cors-anywhere": "^0.4.1",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "ejs": "~2.6.1",
@@ -18,7 +19,9 @@
     "morgan": "~1.9.1",
     "mqtt": "^3.0.0",
     "node-sass-middleware": "0.11.0",
-    "pg": "^7.12.1",
-    "cors-anywhere": "^0.4.1"
+    "pg": "^7.12.1"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5"
   }
 }
