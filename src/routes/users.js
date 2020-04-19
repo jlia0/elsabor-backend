@@ -41,14 +41,16 @@ const router = express.Router();
 //     });
 // });
 
+// ADD DELETE UPDATE SEARCH
+
+// user table related
 router.post('/register', async (req, res) => {
   try {
     const { email, username, password, type } = req.body;
-    // eslint-disable-next-line no-unused-vars
     const { rows } = await SQL(
-      `INSERT INTO public.user (email, username, password, type) VALUES ('${email}','${username}','${password}','${type}');`
+      `INSERT INTO public.user (email, username, password, type) VALUES ('${email}','${username}','${password}','${type}') returning userid;`,
     );
-    res.status(200).json('Success');
+    res.status(200).json(rows[0].userid);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -57,28 +59,149 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { rows } = await SQL(`SELECT password FROM public.user where email='${email}';`);
+    const { rows } = await SQL(`SELECT * FROM public.user where email='${email}';`);
     if (rows[0].password === password) {
-      // console.log('Login success');
-      res.status(200).send('Success');
+      res.status(200).json(rows[0].userid);
     } else {
-      // console.log('Login failed: pwd');
-      res.status(500).send("Password doesn't match");
+      res.status(500).send('Password doesn\'t match');
     }
   } catch (err) {
-    // console.log(`Login failed ${err.message}`);
     res.status(500).send(err.message);
   }
 });
 
-router.post('/getUserType', async (req, res) => {
+router.get('/getUserType', async (req, res) => {
   try {
-    const { email } = req.body;
-    const { rows } = await SQL(`SELECT type FROM public.user where email='${email}';`);
-    res.status(200).send(rows[0].type.toString());
+    const { userid } = req.body;
+    const { rows } = await SQL(`SELECT type FROM public.user where userid='${userid}';`);
+    res.status(200).json(rows[0].type);
   } catch (err) {
     res.status(500).send(err.message);
   }
 });
+
+router.post('/updateUser', async (req, res) => {
+  try {
+    const { userid, email, username, password, type, link, firstname, lastname } = req.body;
+    const { rows } = await SQL(
+      `UPDATE public.user SET email = '${email}', username = '${username}'
+      , password = '${password}', type = '${type}', link = '${link}', firstname = '${firstname}', lastname = '${lastname}' WHERE userid = '${userid}';`,
+    );
+    console.log(rows);
+    res.status(200).send('Success');
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// not suggested, might be violating foreign key constraints
+router.post('/deleteUser', async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const { rows } = await SQL(`DELETE FROM public.user where userid='${userid}';`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// deal table related
+router.get('/getDeals', async (req, res) => {
+  try {
+    const { rows } = await SQL(`SELECT * FROM public.deal;`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post('/addDeal', async (req, res) => {
+  try {
+    const { name, desp, link, userid } = req.body;
+    const { rows } = await SQL(
+      `INSERT INTO public.deal (name, desp, link, userid) VALUES ('${name}','${desp}','${link}','${userid}') returning dealid;`,
+    );
+    res.status(200).json(rows[0].dealid);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+
+
+// coupon table related
+router.get('/getCouponsByDID', async (req, res) => {
+  try {
+    const { dealid } = req.body;
+    const { rows } = await SQL(`SELECT * FROM public.coupon WHERE dealid = '${dealid}';`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.get('/getCouponByUID', async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const { rows } = await SQL(`SELECT * FROM public.coupon WHERE userid = '${userid}';`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post('/addCoupon', async (req, res) => {
+  try {
+    const { dealid, userid, link, number } = req.body;
+
+    let response = [];
+
+    for (let i = 0; i < number; i++) {
+      const { rows } = await SQL(
+        `INSERT INTO public.coupon (dealid, userid, link) VALUES ('${dealid}','${userid}','${link}') returning couponid;`,
+      );
+      response.push(rows[0].couponid);
+    }
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// menu table related
+router.get('/getMenus', async (req, res) => {
+  try {
+    const { rows } = await SQL(`SELECT * FROM public.menu;`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+router.post('/addMenu', async (req, res) => {
+  try {
+    const { link, userid } = req.body;
+    const { rows } = await SQL(
+      `INSERT INTO public.menu (link, userid) VALUES ('${link}','${userid}') returning menuid;`,
+    );
+    res.status(200).json(rows[0].menuid);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// saved deal table related
+router.get('/getSavedDeals', async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const { rows } = await SQL(`SELECT * FROM public.saved_deal WHERE userid = '${userid}';`);
+    res.status(200).json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+
+
 
 module.exports = router;
