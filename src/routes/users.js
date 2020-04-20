@@ -5,13 +5,16 @@ const mqtt = require('mqtt');
 const router = express.Router();
 
 const mqttUrl = 'mqtt://tailor.cloudmqtt.com';
+
 const options = {
   port: 18184,
   username: 'kvuwrinm',
-  password: 'TJaId_fJy2me',
+  password: 'tucVHt31q7Gx',
 };
 // const msgTopic = '#'; // subscribe to *all* topics
 const client = mqtt.connect(mqttUrl, options);
+
+console.log(client, mqtt);
 
 client.on('connect', d => {
   if (d) {
