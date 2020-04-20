@@ -13,13 +13,20 @@ const options = {
 // const msgTopic = '#'; // subscribe to *all* topics
 const client = mqtt.connect(mqttUrl, options);
 
-client.on('connect', d =>{
-  if (d){
-    console.log("MQTT Connect Successfully!");
-  }else{
-    console.error("MQTT Connect Failed!");
+client.on('connect', d => {
+  if (d) {
+    console.log('MQTT Connect Successfully!');
+  } else {
+    console.error('MQTT Connect Failed!');
   }
 
+});
+
+client.on('close', function(d) {
+  console.log(d);
+});
+client.on('offline', function(d) {
+  console.log(d);
 });
 
 // ADD DELETE UPDATE SEARCH
@@ -78,13 +85,13 @@ router.post('/updateUser', async (req, res) => {
 
 router.post('/updateUserAvatar', async (req, res) => {
   try {
-    const { userid,  link , token} = req.body;
+    const { userid, link, token } = req.body;
     const { rows } = await SQL(
       `UPDATE public.user SET  link = '${link}&token=${token}' WHERE userid = '${userid}';`,
     );
-    if (rows.length === 0){
+    if (rows.length === 0) {
       res.status(200).send('Success');
-    }else{
+    } else {
       res.status(500).send('Failed');
     }
 
@@ -132,7 +139,7 @@ router.post('/addDeal', async (req, res) => {
       `INSERT INTO public.deal (name, desp, link, userid, expiry) VALUES ('${name}','${desp}','${link}','${userid}','${expiry}') returning dealid;`,
     );
     res.status(200).json(rows[0].dealid);
-    client.publish("notification", `There is a timed new deal ${name}: ${desp}! Go check it out!`);
+    client.publish('notification', `There is a timed new deal ${name}: ${desp}! Go check it out!`);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -143,10 +150,10 @@ router.get('/deals/:dealid', async (req, res) => {
     const { dealid } = req.params;
     let tempdate = new Date().toLocaleDateString();
     const { rows } = await SQL(`SELECT * FROM public.deal WHERE dealid = '${dealid}' AND expiry >= '${tempdate}';`);
-    if (rows.length === 0){
-      res.status(200).send("This deal has expired or does not exist!");
-    }else{
-      res.status(200).send("This deal is verified successfully!");
+    if (rows.length === 0) {
+      res.status(200).send('This deal has expired or does not exist!');
+    } else {
+      res.status(200).send('This deal is verified successfully!');
     }
 
 
@@ -251,8 +258,6 @@ router.post('/addSavedDeal', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
-
-
 
 
 module.exports = router;
