@@ -1,10 +1,30 @@
 const express = require('express');
 const { SQL } = require('../db/sql');
+const mqtt = require('mqtt');
 
 const router = express.Router();
 
+const mqttUrl = 'mqtt://tailor.cloudmqtt.com';
+const options = {
+  port: 18184,
+  username: 'kvuwrinm',
+  password: 'TJaId_fJy2me',
+};
+// const msgTopic = '#'; // subscribe to *all* topics
+const client = mqtt.connect(mqttUrl, options);
+
+client.on('connect', d =>{
+  if (d){
+    console.log("MQTT Connect Successfully!");
+  }else{
+    console.error("MQTT Connect Failed!");
+  }
+
+});
+
 // ADD DELETE UPDATE SEARCH
 
+console.log(mqtt);
 // user table related
 router.post('/register', async (req, res) => {
   try {
@@ -112,6 +132,7 @@ router.post('/addDeal', async (req, res) => {
       `INSERT INTO public.deal (name, desp, link, userid, expiry) VALUES ('${name}','${desp}','${link}','${userid}','${expiry}') returning dealid;`,
     );
     res.status(200).json(rows[0].dealid);
+    client.publish("notification", `There is a timed new deal ${name}: ${desp}! Go check it out!`);
   } catch (err) {
     res.status(500).send(err.message);
   }

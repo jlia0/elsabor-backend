@@ -3,23 +3,13 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 var cors = require('cors');
-
-
-// const cors_proxy = require('cors-anywhere');
-// const mqtt = require('mqtt');
 // const mongoose = require('mongoose');
-// const actions = require('./src/actions/actions');
-// const { indexRouter, usersRouter, sensorRoute } = require('./src/routes/index');
+
 const userRouter = require('./src/routes/users');
 const indexRouter = require('./src/routes/index');
-// const { parseMessage } = require('./src/utils');
 
 const app = express();
 
-// const mqttUrl = process.env.CLOUDMQTT_URL || 'mqtt://localhost:1883';
-// const msgTopic = '#'; // subscribe to *all* topics
-// const client = mqtt.connect(mqttUrl);
-// client.on('connect', onConnect);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -32,21 +22,6 @@ app.use('/users', userRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => next(createError(404)));
-
-// Listen on a specific host via the HOST environment variable
-// const host = process.env.HOST || '0.0.0.0';
-// // Listen on a specific port via the PORT environment variable
-// const port = process.env.PORT || 8080;
-//
-// cors_proxy
-//   .createServer({
-//     originWhitelist: [], // Allow all origins
-//     requireHeader: ['origin', 'x-requested-with'],
-//     removeHeaders: ['cookie', 'cookie2'],
-//   })
-//   .listen(port, host, function() {
-//     console.log(`Running CORS Anywhere on ${host}:${port}`);
-//   });
 
 // const allowCrossDomain = function(req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*');
@@ -87,13 +62,6 @@ app.use((err, req, res) => {
 /**
  * Event listener for MQTT "connect" event.
  */
-// function onConnect() {
-//   client.publish('broker/connected', 'true');
-//
-//   client.subscribe(msgTopic, () => {
-//     client.on('message', async (topic, message) => onMessage(topic, message));
-//   });
-// }
 
 // NOTE: topic can contain only strings, "-" and "_"
 // async function onMessage(topic, message) {
@@ -101,18 +69,7 @@ app.use((err, req, res) => {
 //   // 1. a string: "topic"
 //   // 2. string with a slash: "topic/somethingelse"
 //   if (/([A-Za-z\-_]+$|[A-Za-z\-_]+\/[A-Za-z\-_]+$)/g.test(topic)) {
-//     const parsed = parseMessage(message);
-//     let deviceId = -1;
-//     let data = [];
 //
-//     if (parsed instanceof Object) {
-//       deviceId = parsed.from || parsed.device || parsed.deviceId || -1;
-//       data = [...parsed.data];
-//     } else {
-//       data = [parsed];
-//     }
-//
-//     await actions.saveSensorData({ data, topic, deviceId });
 //   }
 // }
 
