@@ -170,7 +170,7 @@ router.post('/searchDeals', async (req, res) => {
   try {
     const { keyword } = req.body;
     const { rows } = await SQL(
-      `SELECT * FROM public.deal WHERE name ~* '${keyword}';`,
+      `SELECT * FROM public.deal WHERE name ~* '${keyword}' OR desp ~* '${keyword}';`,
     );
     res.status(200).json(rows);
   } catch (err) {
