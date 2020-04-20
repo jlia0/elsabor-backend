@@ -22,16 +22,15 @@ client.on('connect', d => {
 
 });
 
-client.on('close', function(d) {
-  console.log(d);
-});
-client.on('offline', function(d) {
-  console.log(d);
-});
+// client.on('close', function(d) {
+//   console.log(d);
+// });
+// client.on('offline', function(d) {
+//   console.log(d);
+// });
 
 // ADD DELETE UPDATE SEARCH
 
-console.log(mqtt);
 // user table related
 router.post('/register', async (req, res) => {
   try {
@@ -139,7 +138,7 @@ router.post('/addDeal', async (req, res) => {
       `INSERT INTO public.deal (name, desp, link, userid, expiry) VALUES ('${name}','${desp}','${link}','${userid}','${expiry}') returning dealid;`,
     );
     res.status(200).json(rows[0].dealid);
-    client.publish('notification', `There is a timed new deal ${name}: ${desp}! Go check it out!`);
+    client.publish('notification', `There is a new timed deal ${name}: ${desp}! Go check it out!`);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -151,9 +150,11 @@ router.get('/deals/:dealid', async (req, res) => {
     let tempdate = new Date().toLocaleDateString();
     const { rows } = await SQL(`SELECT * FROM public.deal WHERE dealid = '${dealid}' AND expiry >= '${tempdate}';`);
     if (rows.length === 0) {
-      res.status(200).send('This deal has expired or does not exist!');
+      res.render('users.ejs', { title: 'This deal has expired or does not exist!', dealid: dealid });
+      //res.status(200).send('This deal has expired or does not exist!');
     } else {
-      res.status(200).send('This deal is verified successfully!');
+      res.render('users.ejs', { title: 'This deal is verified successfully!', dealid: dealid });
+      //res.status(200).send('This deal is verified successfully!');
     }
 
 
